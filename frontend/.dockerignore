@@ -1,0 +1,34 @@
+# ─── Frontend .dockerignore ────────────────
+# Reduces build context from ~500MB to ~50MB
+
+node_modules/
+dist/
+.vite/
+
+# Test / coverage
+coverage/
+*.test.ts
+*.spec.ts
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Env (only needed at runtime, not build)
+.env.local
+.env.*.local
+
+# Docs
+*.md
