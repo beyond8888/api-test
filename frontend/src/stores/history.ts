@@ -88,6 +88,13 @@ export const useHistoryStore = defineStore('history', () => {
     }
   }
 
+  /** 仅清空内存中的历史记录（不调后端），供账号切换时避免旧账号数据残留 */
+  function resetLocal() {
+    entries.value = []
+    total.value = 0
+    page.value = 1
+  }
+
   return {
     entries,
     loading,
@@ -99,5 +106,6 @@ export const useHistoryStore = defineStore('history', () => {
     deleteEntry,
     deleteEntries,
     clearHistory: clearHistoryStore,
+    resetLocal,
   }
 })
