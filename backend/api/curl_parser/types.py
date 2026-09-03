@@ -1,3 +1,4 @@
+import re
 from typing import TypedDict
 
 
@@ -17,6 +18,27 @@ class CurlParsedResult(TypedDict, total=False):
     insecure: bool
     compressed: bool
     warnings: list[str]
+
+
+def looks_like_url(token: str) -> bool:
+    """Heuristic to decide whether a non-flag positional token is the URL.
+
+    curl's URL argument may legitimately be:
+      * a full URL with scheme            -> https://example.com/api
+      * a Postman/Insomnia variable URL   -> {{baseUrl}}/api/path  or {{baseUrl}}
+      * a path-only URL                    -> /api/path
+      * a bare host (curl adds http://)    -> example.com  or  host:8080/path
+    """
+    if "://" in token:
+        return True
+    # Postman / Insomnia template variables, e.g. {{baseUrl}}/api
+    if token.startswith("{{"):
+        return True
+    # Path-only URLs
+    if token.startswith("/"):
+        return True
+    # Bare host without scheme: no spaces and a domain/port/path shape
+    return " " not in token and bool(re.match(r"^[A-Za-z0-9._-]+(:[0-9]+)?(/.*)?$", token))
 
 
 class ParserState:
